@@ -1,75 +1,67 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Craftland Map Gallery</title>
+  <title>Craftland Maps</title>
   <style>
-    body {
-      font-family: sans-serif;
-      background: #f2f2f2;
-      margin: 0;
-      padding: 20px;
-    }
-    .map-card {
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      margin-bottom: 20px;
-      padding: 16px;
-      text-align: center;
-    }
-    .map-img {
-      width: 100%;
-      max-width: 400px;
-      border-radius: 8px;
-    }
-    .map-code {
-      margin: 10px 0;
-      font-weight: bold;
-      font-size: 16px;
-      background: #eee;
-      display: inline-block;
-      padding: 6px 12px;
-      border-radius: 6px;
-    }
-    .copy-btn {
-      padding: 6px 12px;
-      border: none;
-      background-color: #4CAF50;
-      color: white;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    .copy-btn:hover {
-      background-color: #45a049;
-    }
+    body { font-family: sans-serif; background: #f2f2f2; padding: 20px; }
+    .card { background: white; padding: 15px; border-radius: 10px; margin-bottom: 15px; box-shadow: 0 2px 5px #ccc; }
+    img { max-width: 100%; border-radius: 8px; }
+    button { background: #4CAF50; color: white; border: none; padding: 8px 12px; margin-top: 5px; cursor: pointer; border-radius: 5px; }
   </style>
 </head>
 <body>
+  <h2>🗺️ Upload Craftland Map</h2>
+  <input type="text" id="code" placeholder="Enter map code"><br><br>
+  <input type="file" id="image" accept="image/png"><br><br>
+  <button onclick="upload()">Upload</button>
 
-  <h1>Craftland Map Gallery</h1>
-
-  <div class="map-card">
-    <img src="https://via.placeholder.com/400x200.png?text=Map+Image+1" class="map-img" alt="Map Image">
-    <div class="map-code" id="code1">-OR2cHBEplh_7wBlFTmY</div>
-    <button class="copy-btn" onclick="copyCode('code1')">Copy Code</button>
-  </div>
-
-  <div class="map-card">
-    <img src="https://via.placeholder.com/400x200.png?text=Map+Image+2" class="map-img" alt="Map Image">
-    <div class="map-code" id="code2">1AD12Bc4EfGH567IJk</div>
-    <button class="copy-btn" onclick="copyCode('code2')">Copy Code</button>
-  </div>
+  <h2>🎮 Uploaded Maps</h2>
+  <div id="maps"></div>
 
   <script>
-    function copyCode(codeId) {
-      const code = document.getElementById(codeId).innerText;
-      navigator.clipboard.writeText(code).then(() => {
-        alert("Map code copied: " + code);
+    async function upload() {
+      const code = document.getElementById("code").value;
+      const file = document.getElementById("image").files[0];
+      if (!code || !file) return alert("Please enter map code and image.");
+
+      const reader = new FileReader();
+      reader.onloadend = async () => {
+        const res = await fetch('/api/upload', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ code, image: reader.result })
+        });
+        if (res.ok) {
+          alert("Uploaded!");
+          loadMaps();
+        } else {
+          alert("Upload failed.");
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    async function loadMaps() {
+      const res = await fetch('/maps.json');
+      const maps = await res.json();
+      const div = document.getElementById("maps");
+      div.innerHTML = '';
+      maps.reverse().forEach((map, i) => {
+        div.innerHTML += `
+          <div class="card">
+            <img src="${map.image}" alt="map">
+            <p><b>Code:</b> <span id="code${i}">${map.code}</span></p>
+            <button onclick="copyCode(${i})">Copy Code</button>
+          </div>`;
       });
     }
-  </script>
 
+    function copyCode(i) {
+      const text = document.getElementById("code" + i).innerText;
+      navigator.clipboard.writeText(text).then(() => alert("Copied: " + text));
+    }
+
+    loadMaps();
+  </script>
 </body>
 </html>
