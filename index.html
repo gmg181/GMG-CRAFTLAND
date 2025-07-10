@@ -109,22 +109,36 @@
     <button type="submit">Add Map</button>
   </form>
 
-  <div class="map-container" id="mapList">
-    <!-- Added maps will appear here -->
-  </div>
+  <div class="map-container" id="mapList"></div>
 
   <script>
     let count = 0;
+
+    // Load from localStorage on page load
+    window.onload = function () {
+      const savedMaps = JSON.parse(localStorage.getItem("maps")) || [];
+      savedMaps.forEach(({ img, code }) => addMapToDOM(img, code));
+    };
 
     document.getElementById('mapForm').addEventListener('submit', function(e) {
       e.preventDefault();
       const imgUrl = document.getElementById('imgUrl').value;
       const mapCode = document.getElementById('mapCode').value;
-      count++;
+      saveToLocalStorage(imgUrl, mapCode);
+      addMapToDOM(imgUrl, mapCode);
+      document.getElementById('mapForm').reset();
+    });
 
+    function saveToLocalStorage(img, code) {
+      const saved = JSON.parse(localStorage.getItem("maps")) || [];
+      saved.push({ img, code });
+      localStorage.setItem("maps", JSON.stringify(saved));
+    }
+
+    function addMapToDOM(imgUrl, mapCode) {
+      count++;
       const mapBox = document.createElement('div');
       mapBox.className = 'map-box';
-
       mapBox.innerHTML = `
         <img src="${imgUrl}" alt="Map Image ${count}" />
         <div class="code-box">
@@ -132,10 +146,8 @@
           <button class="copy-btn" onclick="copyCode('code${count}')">Copy</button>
         </div>
       `;
-
       document.getElementById('mapList').appendChild(mapBox);
-      document.getElementById('mapForm').reset();
-    });
+    }
 
     function copyCode(id) {
       const code = document.getElementById(id).innerText;
