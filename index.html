@@ -18,6 +18,36 @@
       margin-bottom: 20px;
     }
 
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+    }
+
+    input {
+      background: #ffffff;
+      color: black;
+    }
+
+    button {
+      background: #00ffcc;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #00e6b8;
+    }
+
     .map-container {
       display: flex;
       flex-direction: column;
@@ -73,31 +103,40 @@
 
   <h1>CRAFTLAND MAP VIP GAMER</h1>
 
-  <div class="map-container">
+  <form id="mapForm">
+    <input type="text" id="imgUrl" placeholder="Enter Map Image URL" required />
+    <input type="text" id="mapCode" placeholder="Enter Map Code" required />
+    <button type="submit">Add Map</button>
+  </form>
 
-    <!-- MAP #1 -->
-    <div class="map-box">
-      <img src="https://i.ibb.co/PZ9P9v6R/x.jpg" alt="Map Image 1" />
-      <div class="code-box">
-        <span class="code-text" id="code1">#FREEFIRE23B280752025D821479054F407EFE7335262</span>
-        <button class="copy-btn" onclick="copyCode('code1')">Copy</button>
-      </div>
-    </div>
-
-    <!-- MAP #2 (Example) -->
-    <div class="map-box">
-      <img src="https://i.ibb.co/PZ9P9v6R/x.jpg" alt="Map Image 2" />
-      <div class="code-box">
-        <span class="code-text" id="code2">#FREEFIREABCDEF1234567890987654321123456789</span>
-        <button class="copy-btn" onclick="copyCode('code2')">Copy</button>
-      </div>
-    </div>
-
-    <!-- Aap yaha aur maps bhi add kar sakte ho isi format mein -->
-
+  <div class="map-container" id="mapList">
+    <!-- Added maps will appear here -->
   </div>
 
   <script>
+    let count = 0;
+
+    document.getElementById('mapForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const imgUrl = document.getElementById('imgUrl').value;
+      const mapCode = document.getElementById('mapCode').value;
+      count++;
+
+      const mapBox = document.createElement('div');
+      mapBox.className = 'map-box';
+
+      mapBox.innerHTML = `
+        <img src="${imgUrl}" alt="Map Image ${count}" />
+        <div class="code-box">
+          <span class="code-text" id="code${count}">${mapCode}</span>
+          <button class="copy-btn" onclick="copyCode('code${count}')">Copy</button>
+        </div>
+      `;
+
+      document.getElementById('mapList').appendChild(mapBox);
+      document.getElementById('mapForm').reset();
+    });
+
     function copyCode(id) {
       const code = document.getElementById(id).innerText;
       navigator.clipboard.writeText(code).then(() => {
