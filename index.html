@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CRAFTLAND MAP VIP GAMER</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: red;
+      color: white;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .map-container {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    .map-box {
+      background: #1a1a1a;
+      border-radius: 10px;
+      padding: 15px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.4);
+    }
+
+    .map-box img {
+      width: 100%;
+      border-radius: 10px;
+    }
+
+    .code-box {
+      margin-top: 10px;
+      background: #2a2a2a;
+      padding: 10px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .code-text {
+      font-size: 14px;
+      color: #00ffcc;
+      word-break: break-all;
+      flex: 1;
+    }
+
+    .copy-btn {
+      padding: 6px 12px;
+      margin-left: 10px;
+      background-color: #00ffcc;
+      border: none;
+      color: black;
+      font-weight: bold;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .copy-btn:hover {
+      background-color: #00e6b8;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>CRAFTLAND MAP VIP GAMER</h1>
+
+  <div class="map-container">
+
+    <!-- MAP #1 -->
+    <div class="map-box">
+      <img src="https://i.ibb.co/PZ9P9v6R/x.jpg" alt="Map Image 1" />
+      <div class="code-box">
+        <span class="code-text" id="code1">#FREEFIRE23B280752025D821479054F407EFE7335262</span>
+        <button class="copy-btn" onclick="copyCode('code1')">Copy</button>
+      </div>
+    </div>
+
+    <!-- MAP #2 (Example) -->
+    <div class="map-box">
+      <img src="https://i.ibb.co/PZ9P9v6R/x.jpg" alt="Map Image 2" />
+      <div class="code-box">
+        <span class="code-text" id="code2">#FREEFIREABCDEF1234567890987654321123456789</span>
+        <button class="copy-btn" onclick="copyCode('code2')">Copy</button>
+      </div>
+    </div>
+
+    <!-- Aap yaha aur maps bhi add kar sakte ho isi format mein -->
+
+  </div>
+
+  <script>
+    function copyCode(id) {
+      const code = document.getElementById(id).innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        alert("Map Code Copied!");
+      });
+    }
+  </script>
+
+</body>
+</html>
