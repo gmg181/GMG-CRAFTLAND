@@ -1,67 +1,72 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Craftland Maps</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Free Fire Map Code</title>
   <style>
-    body { font-family: sans-serif; background: #f2f2f2; padding: 20px; }
-    .card { background: white; padding: 15px; border-radius: 10px; margin-bottom: 15px; box-shadow: 0 2px 5px #ccc; }
-    img { max-width: 100%; border-radius: 8px; }
-    button { background: #4CAF50; color: white; border: none; padding: 8px 12px; margin-top: 5px; cursor: pointer; border-radius: 5px; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #0e0e0e;
+      color: white;
+      text-align: center;
+      padding: 30px;
+    }
+
+    img {
+      width: 90%;
+      max-width: 500px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    }
+
+    .code-box {
+      margin-top: 20px;
+      background: #1a1a1a;
+      padding: 15px;
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .code-text {
+      font-size: 16px;
+      padding: 5px 10px;
+      color: #00ffcc;
+    }
+
+    .copy-btn {
+      padding: 8px 14px;
+      margin-left: 10px;
+      background-color: #00ffcc;
+      border: none;
+      color: black;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .copy-btn:hover {
+      background-color: #00e6b8;
+    }
   </style>
 </head>
 <body>
-  <h2>🗺️ Upload Craftland Map</h2>
-  <input type="text" id="code" placeholder="Enter map code"><br><br>
-  <input type="file" id="image" accept="image/png"><br><br>
-  <button onclick="upload()">Upload</button>
+  <h1>Free Fire Craftland Map</h1>
+  <img src="https://i.ibb.co/PZ9P9v6R/x.jpg" alt="Map Image" />
 
-  <h2>🎮 Uploaded Maps</h2>
-  <div id="maps"></div>
+  <div class="code-box">
+    <span class="code-text" id="mapCode">#FREEFIRE23B280752025D821479054F407EFE7335262</span>
+    <button class="copy-btn" onclick="copyCode()">Copy</button>
+  </div>
 
   <script>
-    async function upload() {
-      const code = document.getElementById("code").value;
-      const file = document.getElementById("image").files[0];
-      if (!code || !file) return alert("Please enter map code and image.");
-
-      const reader = new FileReader();
-      reader.onloadend = async () => {
-        const res = await fetch('/api/upload', {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({ code, image: reader.result })
-        });
-        if (res.ok) {
-          alert("Uploaded!");
-          loadMaps();
-        } else {
-          alert("Upload failed.");
-        }
-      };
-      reader.readAsDataURL(file);
-    }
-
-    async function loadMaps() {
-      const res = await fetch('/maps.json');
-      const maps = await res.json();
-      const div = document.getElementById("maps");
-      div.innerHTML = '';
-      maps.reverse().forEach((map, i) => {
-        div.innerHTML += `
-          <div class="card">
-            <img src="${map.image}" alt="map">
-            <p><b>Code:</b> <span id="code${i}">${map.code}</span></p>
-            <button onclick="copyCode(${i})">Copy Code</button>
-          </div>`;
+    function copyCode() {
+      const code = document.getElementById("mapCode").innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        alert("Map Code Copied!");
       });
     }
-
-    function copyCode(i) {
-      const text = document.getElementById("code" + i).innerText;
-      navigator.clipboard.writeText(text).then(() => alert("Copied: " + text));
-    }
-
-    loadMaps();
   </script>
 </body>
 </html>
