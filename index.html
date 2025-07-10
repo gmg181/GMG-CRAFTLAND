@@ -3,23 +3,73 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Craftland Upload</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Craftland Map Gallery</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f2f2f2;
+      margin: 0;
+      padding: 20px;
+    }
+    .map-card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+      padding: 16px;
+      text-align: center;
+    }
+    .map-img {
+      width: 100%;
+      max-width: 400px;
+      border-radius: 8px;
+    }
+    .map-code {
+      margin: 10px 0;
+      font-weight: bold;
+      font-size: 16px;
+      background: #eee;
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 6px;
+    }
+    .copy-btn {
+      padding: 6px 12px;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .copy-btn:hover {
+      background-color: #45a049;
+    }
+  </style>
 </head>
-<body class="bg-gray-100 text-center p-4">
-  <h1 class="text-2xl font-bold mb-4">Craftland Map Upload</h1>
-  <button id="uploadBtn" class="text-white bg-purple-600 p-3 rounded-full text-xl">➕</button>
+<body>
 
-  <div id="uploadForm" class="hidden mt-4">
-    <input type="file" id="imageInput" accept="image/png" class="mb-2 block mx-auto" />
-    <input type="text" id="mapCodeInput" placeholder="Enter Map Code" class="border p-2 mb-2 block mx-auto" />
-    <button onclick="uploadImage()" class="bg-green-600 text-white px-4 py-2 rounded">Upload</button>
+  <h1>Craftland Map Gallery</h1>
+
+  <div class="map-card">
+    <img src="https://via.placeholder.com/400x200.png?text=Map+Image+1" class="map-img" alt="Map Image">
+    <div class="map-code" id="code1">-OR2cHBEplh_7wBlFTmY</div>
+    <button class="copy-btn" onclick="copyCode('code1')">Copy Code</button>
   </div>
 
-  <h2 class="text-xl font-semibold mt-6">Uploaded Maps</h2>
-  <div id="gallery" class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4"></div>
+  <div class="map-card">
+    <img src="https://via.placeholder.com/400x200.png?text=Map+Image+2" class="map-img" alt="Map Image">
+    <div class="map-code" id="code2">1AD12Bc4EfGH567IJk</div>
+    <button class="copy-btn" onclick="copyCode('code2')">Copy Code</button>
+  </div>
 
-  <script src="firebase-config.js"></script>
-  <script src="script.js"></script>
+  <script>
+    function copyCode(codeId) {
+      const code = document.getElementById(codeId).innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        alert("Map code copied: " + code);
+      });
+    }
+  </script>
+
 </body>
 </html>
