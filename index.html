@@ -22,14 +22,14 @@
       display: flex;
       justify-content: center;
       gap: 15px;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
       flex-wrap: wrap;
     }
 
     .menu-btn {
       padding: 10px 15px;
-      background-color: #00ffcc;
-      color: black;
+      background-color: white;
+      color: red;
       font-weight: bold;
       border: none;
       border-radius: 6px;
@@ -38,7 +38,7 @@
     }
 
     .menu-btn:hover {
-      background-color: #00e6b8;
+      background-color: #ddd;
     }
 
     .map-container {
@@ -100,7 +100,7 @@
 
   <!-- 🔼 TOP MENU -->
   <div class="top-menu">
-    <a class="menu-btn" href="#all-maps">All Map Codes</a>
+    <a class="menu-btn" href="#all-maps">All Map Code</a>
     <a class="menu-btn" href="#latest-map">Latest Map Code</a>
     <a class="menu-btn" href="https://t.me/YOUR_SUPPORT_LINK" target="_blank">Support & Update</a>
   </div>
@@ -109,7 +109,7 @@
   <div class="map-container" id="all-maps">
 
     <!-- MAP #1 -->
-    <div class="map-box" id="latest-map">
+    <div class="map-box">
       <img src="https://i.ibb.co/PZ9P9v6R/x.jpg" alt="Map Image 1" />
       <div class="code-box">
         <span class="code-text" id="code1">#FREEFIRE23B280752025D821479054F407EFE7335262</span>
@@ -126,11 +126,9 @@
       </div>
     </div>
 
-    <!-- YT / OTHER -->
-    <div class="map-box">
-      <a href="https://youtube.com/@YourChannel" target="_blank">
-        <img src="https://i.ibb.co/YOUR_THUMBNAIL.jpg" alt="Visit VIP GAMES YT" />
-      </a>
+    <!-- LATEST MAP = last -->
+    <div class="map-box" id="latest-map">
+      <img src="https://i.ibb.co/YOUR_THUMBNAIL.jpg" alt="Latest Map" />
       <div class="code-box">
         <span class="code-text" id="code3">Visit VIP GAMES YT</span>
         <button class="copy-btn" onclick="copyCode('code3')">Copy</button>
