@@ -1,47 +1,40 @@
-// Firebase config (replace with your own)
-const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
-};
-
+const firebaseConfig = window.firebaseConfig;
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const storage = firebase.storage();
 
-// Upload function
-async function upload() {
-  const code = document.getElementById('mapCode').value.trim();
-  const file = document.getElementById('mapImage').files[0];
-  const status = document.getElementById('status');
+document.getElementById("uploadBtn").onclick = () => {
+  document.getElementById("uploadForm").classList.toggle("hidden");
+};
 
-  if (!code || !file) {
-    status.innerText = "Please enter code and choose an image.";
-    return;
-  }
+async function uploadImage() {
+  const file = document.getElementById("imageInput").files[0];
+  const mapCode = document.getElementById("mapCodeInput").value;
+  if (!file || !mapCode) return alert("Please provide image and map code");
 
-  const ref = storage.ref('maps/' + file.name);
-  await ref.put(file);
-  const url = await ref.getDownloadURL();
+  const storageRef = storage.ref("maps/" + Date.now() + "-" + file.name);
+  await storageRef.put(file);
+  const imageUrl = await storageRef.getDownloadURL();
 
-  await db.collection('maps').add({ code, imageUrl: url, created: new Date() });
-  status.innerText = "Upload successful!";
+  await db.collection("maps").add({ imageUrl, mapCode, timestamp: Date.now() });
+  alert("Uploaded!");
+  loadGallery();
 }
 
-// Show uploaded maps
-if (location.pathname.includes("maps.html")) {
-  db.collection('maps').orderBy("created", "desc").onSnapshot(snapshot => {
-    const mapList = document.getElementById('mapList');
-    mapList.innerHTML = "";
-    snapshot.forEach(doc => {
-      const data = doc.data();
-      const div = document.createElement("div");
-      div.className = "map";
-      div.innerHTML = `<strong>${data.code}</strong><br/><img src="${data.imageUrl}" alt="map"/>`;
-      mapList.appendChild(div);
-    });
+async function loadGallery() {
+  const gallery = document.getElementById("gallery");
+  gallery.innerHTML = "";
+  const snapshot = await db.collection("maps").orderBy("timestamp", "desc").get();
+  snapshot.forEach(doc => {
+    const data = doc.data();
+    const div = document.createElement("div");
+    div.className = "bg-white p-2 shadow rounded";
+    div.innerHTML = \`
+      <img src="\${data.imageUrl}" alt="map" class="w-full h-32 object-cover rounded"/>
+      <p class="mt-2 font-mono text-sm">Code: \${data.mapCode}</p>
+    \`;
+    gallery.appendChild(div);
   });
 }
+
+window.onload = loadGallery;
