@@ -1,8 +1,9 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CRAFTLAND MAP VIP GAMER</title>
   <style>
     body {
@@ -112,38 +113,22 @@
   <div class="map-container" id="mapList"></div>
 
   <script>
-    let count = 0;
-
-    // Load from localStorage on page load
-    window.onload = function () {
-      const savedMaps = JSON.parse(localStorage.getItem("maps")) || [];
-      savedMaps.forEach(({ img, code }) => addMapToDOM(img, code));
-    };
-
-    document.getElementById('mapForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const imgUrl = document.getElementById('imgUrl').value;
-      const mapCode = document.getElementById('mapCode').value;
-      saveToLocalStorage(imgUrl, mapCode);
-      addMapToDOM(imgUrl, mapCode);
-      document.getElementById('mapForm').reset();
-    });
-
-    function saveToLocalStorage(img, code) {
-      const saved = JSON.parse(localStorage.getItem("maps")) || [];
-      saved.push({ img, code });
-      localStorage.setItem("maps", JSON.stringify(saved));
+    async function fetchMaps() {
+      const res = await fetch('/maps.json');
+      const maps = await res.json();
+      maps.forEach((map, index) => {
+        addMapToDOM(map.imgUrl, map.mapCode, index);
+      });
     }
 
-    function addMapToDOM(imgUrl, mapCode) {
-      count++;
+    function addMapToDOM(imgUrl, mapCode, index) {
       const mapBox = document.createElement('div');
       mapBox.className = 'map-box';
       mapBox.innerHTML = `
-        <img src="${imgUrl}" alt="Map Image ${count}" />
+        <img src="${imgUrl}" alt="Map Image" />
         <div class="code-box">
-          <span class="code-text" id="code${count}">${mapCode}</span>
-          <button class="copy-btn" onclick="copyCode('code${count}')">Copy</button>
+          <span class="code-text" id="code${index}">${mapCode}</span>
+          <button class="copy-btn" onclick="copyCode('code${index}')">Copy</button>
         </div>
       `;
       document.getElementById('mapList').appendChild(mapBox);
@@ -155,7 +140,22 @@
         alert("Map Code Copied!");
       });
     }
-  </script>
 
+    document.getElementById('mapForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const imgUrl = document.getElementById('imgUrl').value;
+      const mapCode = document.getElementById('mapCode').value;
+
+      await fetch('/api/add-map', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ imgUrl, mapCode })
+      });
+
+      location.reload();
+    });
+
+    fetchMaps();
+  </script>
 </body>
 </html>
